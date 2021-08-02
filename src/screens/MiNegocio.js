@@ -32,6 +32,22 @@ function MiNegocio(props){
             }
         }
     }
+    const handlePressClientes = async ()=>{
+        let jwt = await AsyncStorage.getItem('jwt')
+        let response = await fetch(`${apiUrl}/isadmin`,{
+            headers: {'Authorization': 'Bearer '+ jwt}
+        })
+        if(response.status === 401){
+            props.navigation.navigate('Login')
+        }else{
+            response = await response.json()
+            if(response.auth){
+                props.navigation.navigate('Editar clientes')
+            }else{
+                setShowAlertPrivate(true)
+            }
+        }
+    }
 
     return(
         <View style={styles.container}>
@@ -40,7 +56,7 @@ function MiNegocio(props){
                 <IconsFeather style={styles.icon} name='shopping-cart' size={45} color='black' />
             </Pressable>
 
-            <Pressable style={styles.item}>
+            <Pressable style={styles.item} onPress={handlePressClientes}>
                 <Text style={styles.text}> Editar clientes </Text>
                 <Ionicons style={styles.icon} name='people' size={45} color='black' />
             </Pressable>
@@ -53,7 +69,7 @@ function MiNegocio(props){
                 show={showAlertPrivate}
                 showProgress={false}
                 title="Area protegida"
-                message='Debes se administrador para poder ingresar a esta area'
+                message='Debes ser administrador para poder ingresar a esta area'
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={false}
                 showCancelButton={false}

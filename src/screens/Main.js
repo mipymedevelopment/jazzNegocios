@@ -29,7 +29,7 @@ function Main(props){
             </View>
             <Pressable onPress={handlePressSalir}><Text>SAlir</Text></Pressable>
 
-            <BigButton style={styles.nuevoPedido} text='Nuevo pedido' />
+            <BigButton onPress={()=>{props.navigation.navigate('Nuevo delivery')}} style={styles.nuevoPedido} text='Nuevo pedido' />
         </View>
     )
 }

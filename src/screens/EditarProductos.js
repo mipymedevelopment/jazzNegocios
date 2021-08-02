@@ -3,6 +3,7 @@ import {View, Text, TextInput, Pressable,FlatList, StyleSheet} from 'react-nativ
 import Icons from 'react-native-vector-icons/AntDesign'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useIsFocused } from '@react-navigation/native'
+import AwesomeAlert from 'react-native-awesome-alerts'
 
 import ListItem from '../components/ListItem'
 import colors from '../utils/colors'
@@ -11,6 +12,9 @@ import levenshtein from '../utils/levenshtein'
 
 function EditarProductos(props){
 
+    const [toRemove, setToRemove] = useState('')
+    const [showAlertRemove, setShowAlertRemove] = useState(false)
+    const [showAlertFailure, setShowAlertFailure] = useState(false)
     const [selected, setSelected] = useState(1)
     const [filtrados, setFiltrados] = useState([])
     const [productos, setProductos] = useState([])
@@ -49,6 +53,29 @@ function EditarProductos(props){
         
     }
 
+    const handlePressRemove = (producto) =>{
+        setToRemove(producto)
+        setShowAlertRemove(true)
+    }
+
+    const removeProduct = async () =>{
+        let jwt = await AsyncStorage.getItem('jwt')
+        let response = await fetch(`${apiUrl}/removeproduct`,{
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+jwt},
+            body: JSON.stringify({
+                producto: toRemove
+            })
+        })
+        if(response.status===401){
+            props.navigation.navigate('Login')
+        }else if(response.status===500){
+            setShowAlertFailure(true)
+        }else if(response.status===200){
+            loadProducts()
+        }
+    }
+
     const setSelectedWrapper = index =>{
         setSelected(index)
     }
@@ -70,9 +97,44 @@ function EditarProductos(props){
             <FlatList 
                 style={styles.list}
                 data={filtrados}
-                renderItem={({item, index}) => <ListItem onPress={setSelectedWrapper} selected={selected} producto={item.p} index={index} />}
+                renderItem={({item, index}) => <ListItem onRemove={handlePressRemove} onPress={setSelectedWrapper} selected={selected} producto={item.p} index={index} />}
                 keyExtractor={item=>item.p}
             />
+            <AwesomeAlert
+                show={showAlertRemove}
+                showProgress={false}
+                title="Confirmacion"
+                message='¿Desea eliminar este producto de la lista?'
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showCancelButton={true}
+                showConfirmButton={true}
+                confirmText="Eliminalo!"
+                cancelText='Mejor no'
+                confirmButtonColor="#DD6B55"
+                onConfirmPressed={() => {
+                    removeProduct()
+                    setShowAlertRemove(false)
+                }}
+                onCancelPressed={()=>{
+                    setShowAlertRemove(false)
+                }}
+                />
+                <AwesomeAlert
+                show={showAlertFailure}
+                showProgress={false}
+                title="Error"
+                message='Ha ocurrido un error mientras se eliminaba el producto'
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showCancelButton={false}
+                showConfirmButton={true}
+                confirmText="Continuar"
+                confirmButtonColor="#DD6B55"
+                onConfirmPressed={() => {
+                    setShowAlertFailure(false)
+                }}
+                />
         </View>
     )
 }
