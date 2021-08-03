@@ -48,6 +48,10 @@ function MiNegocio(props){
             }
         }
     }
+    const handlePressSalir = async () =>{
+        await AsyncStorage.setItem('jwt','')
+        props.navigation.navigate('Login')
+    }
 
     return(
         <View style={styles.container}>
@@ -61,10 +65,11 @@ function MiNegocio(props){
                 <Ionicons style={styles.icon} name='people' size={45} color='black' />
             </Pressable>
 
-            <Pressable style={styles.item}>
+            <Pressable onPress={handlePressSalir} style={styles.item}>
                 <Text style={styles.text}> Mi cuenta </Text>
                 <IconsCommunity style={styles.icon} name='account' size={45} color='black' />
             </Pressable>
+
             <AwesomeAlert
                 show={showAlertPrivate}
                 showProgress={false}

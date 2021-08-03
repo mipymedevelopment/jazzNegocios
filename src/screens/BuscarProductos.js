@@ -80,7 +80,7 @@ function BuscarProducto(props){
                 }
             }
         })
-        props.navigation.navigate('Nuevo delivery', {cliente: props.route.params.cliente, productos: productos2send})
+        props.navigation.navigate('Nuevo delivery', {cliente: props.route.params.cliente, productos: productos2send, monto:props.route.params.monto})
     }
 
     useEffect(()=>{

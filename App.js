@@ -16,6 +16,7 @@ import BuscarCliente from './src/screens/BuscarCliente';
 import BuscarProducto from './src/screens/BuscarProductos';
 
 import Main from './src/screens/Main'
+import EnvioDetalle from './src/screens/EnvioDetalle';
 import Login from './src/screens/Login'
 
 import MyContext from './src/utils/MyContext'
@@ -40,6 +41,7 @@ const App = () => {
           <Stack.Screen name='Nuevo delivery' component={NuevoDelivery}/>  
           <Stack.Screen name='Buscar cliente' component={BuscarCliente}/>  
           <Stack.Screen name='Buscar producto' component={BuscarProducto}/>  
+          <Stack.Screen name='Detalle' component={EnvioDetalle}/>  
         </Stack.Navigator>  
       </NavigationContainer>
     </MyContext.Provider>

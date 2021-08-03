@@ -49,7 +49,7 @@ function BuscarCliente(props){
     }
 
     const handlePressItem = (cliente) =>{
-        props.navigation.navigate('Nuevo delivery',{cliente,productos:props.route.params.productos})
+        props.navigation.navigate('Nuevo delivery',{cliente,productos:props.route.params.productos, monto:props.route.params.monto})
     }
 
     useEffect(()=>{
